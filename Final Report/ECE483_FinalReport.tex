@@ -54,15 +54,25 @@
 
 
     \chapter{Overall Design Approach}
-    \section{Design choices}
-    asdf
+    \section{Design choices and System level trade-offs}
+    This project entailed the design and simulation of a low dropout regulator (LDO) meeting stringent input/output/load criteria while maintaining precise DC Load and Line Regulation. The initial stage of our design process involved a comprehensive study of the internal schematics and architecture of an LDO. Fundamentally, an LDO comprises an operational amplifier (op-amp) looped with biasing resistors and a pass transistor. Our choice of a PMOS pass transistor stemmed from its ability to generate a positive driving signal at low voltages, albeit with minor compromises in Line Regulation and Power Supply Rejection Ratio (PSSR).
 
-    \section{System level trade-offs}
-    asdf
+    In our analysis, we recognized the pivotal role of the Operational Transconductance Amplifier (OTA) in meeting performance targets. Initially, our 5-pack OTA failed to meet the required line regulation specifications, prompting us to explore a two-stage design. However, this approach introduced complexities such as pole stabilization challenges and increased circuit intricacies.
+   
+    Subsequently, we narrowed down our design to a single-stage configuration and evaluated two options: the folded cascode and the telescopic cascode OTA. After careful consideration, we opted for the telescopic cascode topology due to its superior output swing, Input Common-Mode Range (ICMR), and compatibility with our PMOS pass device, which exhibits a wide output swing. The Telescopic cascode OTA required an additional biasing circuit. For this circuit, we leveraged the use of resistors and current mirroring to optimally bias the telescopic OTA at four different nodes. Additionally, we introduced a compensation capacitor between the Gate Voltage and Output Voltage of the pass transistor. The inclusion of a compensation capacitor in the LDO design serves a crucial role in enhancing the stability and simplifying the analysis and simulation of the system. Specifically, the compensation capacitor is strategically placed to make the output pole of the error amplifier dominant, thereby transforming the overall system behavior into that of a single pole system. By making the error amplifier output pole dominant, the compensation capacitor effectively adjusts the phase margin and loop gain characteristics of the LDO circuit. This adjustment is pivotal in ensuring stable and predictable performance across various operating conditions, load variations, and input disturbances. Through iterative simulations and parameter optimizations, we determined an optimal capacitance value of 10pF, ensuring stability and performance consistency.
 
     \chapter{Schematic \& Parameters}
     \section{Schematic}
 
+    \begin{figure}[ht!]
+        \centering
+        \begin{minipage}[b]{0.8\linewidth}
+            \centering
+            \includegraphics[width=\linewidth]{LDOFinalSchematic.png}
+            % \caption{LG Magnitude at 0.1mA}
+            \label{fig:LDOSchematic}
+        \end{minipage}
+    \end{figure}
 
     \section{Device Parameters}
     \begin{center}
@@ -130,8 +140,6 @@
         \end{tabular}
     \end{center}
     
-        
-
     \chapter{Performance}
 
     \section{Simulation Results}
